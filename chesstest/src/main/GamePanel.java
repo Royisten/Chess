@@ -3,7 +3,7 @@ package main;
 import java.awt.Color;
 
 import javax.swing.JPanel;
-import javax.swing.plaf.DimensionUIResource; //FIXME ; Switch to "Dimesion" if ui not
+import javax.swing.plaf.DimensionUIResource; //FIXME ; Switch to "Dimesion" if ui not responding faster
 
 public class GamePanel extends JPanel{
     public static final int WIDTH = 1100;  
