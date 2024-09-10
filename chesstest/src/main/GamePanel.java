@@ -2,7 +2,7 @@ package main;
 
 import java.awt.Color;
 import java.awt.Graphics;
-
+import java.awt.Graphics2D;
 import javax.swing.JPanel;
 import javax.swing.plaf.DimensionUIResource; //! Switch to "Dimesion" if ui not responding faster
 
@@ -10,10 +10,14 @@ public class GamePanel extends JPanel implements Runnable {
 
     public static final int WIDTH = 1100;
     public static final int HEIGHT = 800;
+
+   
     final int FPS = 60;
 
     // *implement thread
     Thread gameThread;
+
+    Board board=new Board();
 
     public GamePanel() {
         setPreferredSize(new DimensionUIResource(WIDTH, HEIGHT));
@@ -67,7 +71,10 @@ public class GamePanel extends JPanel implements Runnable {
 
     }
 
+    @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        Graphics2D g2 =(Graphics2D)g;
+        board.draw(g2);
     }
 }
