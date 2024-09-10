@@ -1,5 +1,5 @@
 package pieces;
 
-public class piece {
+public class Piece {
     
 }
