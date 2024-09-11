@@ -11,13 +11,17 @@ public class GamePanel extends JPanel implements Runnable {
     public static final int WIDTH = 1100;
     public static final int HEIGHT = 800;
 
-   
     final int FPS = 60;
 
     // *implement thread
     Thread gameThread;
 
-    Board board=new Board();
+    Board board = new Board();
+
+    //?color 
+    public static final int WHITE = 0;
+    public static final int BLACK = 1;
+    int currentColor = WHITE;
 
     public GamePanel() {
         setPreferredSize(new DimensionUIResource(WIDTH, HEIGHT));
@@ -74,7 +78,7 @@ public class GamePanel extends JPanel implements Runnable {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2 =(Graphics2D)g;
+        Graphics2D g2 = (Graphics2D) g;
         board.draw(g2);
     }
 }

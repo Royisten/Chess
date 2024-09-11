@@ -1,4 +1,10 @@
 {
     "files.autoSaveWhenNoErrors": true,
-    "files.autoSaveWorkspaceFilesOnly": true
+    "files.autoSaveWorkspaceFilesOnly": true,
+    "explorer.compactFolders": false,
+    "jdk.test.editor.enableShortcuts": true,
+    "java.debug.settings.hotCodeReplace": "auto",
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.edit.validateAllOpenBuffersOnChanges": true,
+    "java.codeGeneration.generateComments": true
 }
