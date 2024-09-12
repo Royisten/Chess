@@ -4,7 +4,12 @@
     "explorer.compactFolders": false,
     "jdk.test.editor.enableShortcuts": true,
     "java.debug.settings.hotCodeReplace": "auto",
-    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.configuration.updateBuildConfiguration": "interactive",
     "java.edit.validateAllOpenBuffersOnChanges": true,
-    "java.codeGeneration.generateComments": true
+    "java.codeGeneration.generateComments": true,
+    "java.import.gradle.wrapper.enabled": true,
+    "java.symbols.includeSourceMethodDeclarations": true,
+    "javascript.experimental.updateImportsOnPaste": true,
+    "typescript.tsserver.web.projectWideIntellisense.suppressSemanticErrors": true,
+    "js/ts.implicitProjectConfig.strictNullChecks": true
 }
