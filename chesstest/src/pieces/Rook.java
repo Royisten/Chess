@@ -8,9 +8,9 @@ public class Rook extends Piece {
     public Rook(int color, int col, int row) {
         super(color, col, row);
         if (color == GamePanel.WHITE) {
-            image = getImage("/piece/white_rook");
+            image = getImage("white_rook");
         } else {
-            image = getImage("/piece/black_rook");
+            image = getImage("black_rook");
         }
     }
 }

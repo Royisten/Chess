@@ -27,7 +27,7 @@ public class Piece {
     public BufferedImage getImage(String imagePath){
       BufferedImage image= null;
       try {
-         image =ImageIO.read(getClass().getResourceAsStream(imagePath + ".png"));
+         image =ImageIO.read(getClass().getResourceAsStream("/piece/" + imagePath + ".png"));
       } catch (IOException e) {
         e.printStackTrace();
       }
