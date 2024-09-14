@@ -1,5 +1,6 @@
 package main;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -27,11 +28,12 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
 
     Board board = new Board();
+    Mouse mouse = new Mouse();
 
     //?Piece
     public static ArrayList<Piece> pieces = new ArrayList<>();
     public static ArrayList<Piece> simPieces = new ArrayList<>();
-
+    Piece activeP;
     //?color 
     public static final int WHITE = 0;
     public static final int BLACK = 1;
@@ -40,6 +42,9 @@ public class GamePanel extends JPanel implements Runnable {
     public GamePanel() {
         setPreferredSize(new DimensionUIResource(WIDTH, HEIGHT));
         setBackground(Color.BLACK);
+        addMouseMotionListener(mouse);
+        addMouseListener(mouse);
+
         setPieces();
         copyPieces(pieces, simPieces);
     }
@@ -52,54 +57,55 @@ public class GamePanel extends JPanel implements Runnable {
     public void setPieces() {
         //?White
         //pawn
-        pieces.add(new Pawn(WHITE,0,6));
-        pieces.add(new Pawn(WHITE,1,6));
-        pieces.add(new Pawn(WHITE,2,6));
-        pieces.add(new Pawn(WHITE,3,6));
-        pieces.add(new Pawn(WHITE,4,6));
-        pieces.add(new Pawn(WHITE,5,6));
-        pieces.add(new Pawn(WHITE,6,6));
-        pieces.add(new Pawn(WHITE,7,6));
+        pieces.add(new Pawn(WHITE, 0, 6));
+        pieces.add(new Pawn(WHITE, 1, 6));
+        pieces.add(new Pawn(WHITE, 2, 6));
+        pieces.add(new Pawn(WHITE, 3, 6));
+        pieces.add(new Pawn(WHITE, 4, 6));
+        pieces.add(new Pawn(WHITE, 5, 6));
+        pieces.add(new Pawn(WHITE, 6, 6));
+        pieces.add(new Pawn(WHITE, 7, 6));
         //knight
-        pieces.add(new Knight(WHITE,1,7));
-        pieces.add(new Knight(WHITE,6,7));
+        pieces.add(new Knight(WHITE, 1, 7));
+        pieces.add(new Knight(WHITE, 6, 7));
         //rook
-        pieces.add(new Rook(WHITE,0,7));
-        pieces.add(new Rook(WHITE,7,7));
+        pieces.add(new Rook(WHITE, 0, 7));
+        pieces.add(new Rook(WHITE, 7, 7));
         //bishop
-        pieces.add(new Bishop(WHITE,2,7));
-        pieces.add(new Bishop(WHITE,5,7));
+        pieces.add(new Bishop(WHITE, 2, 7));
+        pieces.add(new Bishop(WHITE, 5, 7));
         //queen
-        pieces.add(new Queen(WHITE,3,7));
+        pieces.add(new Queen(WHITE, 3, 7));
         //king
-        pieces.add(new King(WHITE,4,7));
+        pieces.add(new King(WHITE, 4, 7));
 
         //?Black
         //pawn
-        pieces.add(new Pawn(BLACK,0,1));
-        pieces.add(new Pawn(BLACK,1,1));
-        pieces.add(new Pawn(BLACK,2,1));
-        pieces.add(new Pawn(BLACK,3,1));
-        pieces.add(new Pawn(BLACK,4,1));
-        pieces.add(new Pawn(BLACK,5,1));
-        pieces.add(new Pawn(BLACK,6,1));
-        pieces.add(new Pawn(BLACK,7,1));
+        pieces.add(new Pawn(BLACK, 0, 1));
+        pieces.add(new Pawn(BLACK, 1, 1));
+        pieces.add(new Pawn(BLACK, 2, 1));
+        pieces.add(new Pawn(BLACK, 3, 1));
+        pieces.add(new Pawn(BLACK, 4, 1));
+        pieces.add(new Pawn(BLACK, 5, 1));
+        pieces.add(new Pawn(BLACK, 6, 1));
+        pieces.add(new Pawn(BLACK, 7, 1));
         //knight
-        pieces.add(new Knight(BLACK,1,0));
-        pieces.add(new Knight(BLACK,6,0));
+        pieces.add(new Knight(BLACK, 1, 0));
+        pieces.add(new Knight(BLACK, 6, 0));
         //rook
-        pieces.add(new Rook(BLACK,0,0));
-        pieces.add(new Rook(BLACK,7,0));
+        pieces.add(new Rook(BLACK, 0, 0));
+        pieces.add(new Rook(BLACK, 7, 0));
         //bishop
-        pieces.add(new Bishop(BLACK,2,0));
-        pieces.add(new Bishop(BLACK,5,0));
+        pieces.add(new Bishop(BLACK, 2, 0));
+        pieces.add(new Bishop(BLACK, 5, 0));
         //queen
-        pieces.add(new Queen(BLACK,3,0));
+        pieces.add(new Queen(BLACK, 3, 0));
         //king
-        pieces.add(new King(BLACK,4,0));
+        pieces.add(new King(BLACK, 4, 0));
 
     }
-    private void  copyPieces(ArrayList<Piece> source,ArrayList<Piece> target){
+
+    private void copyPieces(ArrayList<Piece> source, ArrayList<Piece> target) {
         target.clear();
         for (int i = 0; i < source.size(); i++) {
             target.add(source.get(i));
@@ -146,6 +152,31 @@ public class GamePanel extends JPanel implements Runnable {
     // !the above method calls the update and paintComponent 60 times per second
     private void update() {
 
+        //!Mouse pressed
+        if (mouse.pressed) {
+            if (activeP == null) {
+                //?if activeP is null, check if  u can pick up a piece
+                for (Piece piece : simPieces) {
+                    //?if mouse on ally piece check if u can pick up it as a activeP
+                    if (piece.color == currentColor
+                            && piece.col == mouse.x / Board.SQUARE_SIZE
+                            && piece.row == mouse.x / Board.SQUARE_SIZE) {
+                        activeP = piece;
+                    }
+                }
+            } else {
+                //!if palyer is holding a piece
+                simulate();
+            }
+        }
+    }
+
+    private void simulate() {
+        //?if piece is held by user , position is "updated"
+        activeP.x = mouse.x - Board.HALF_SQUARE_SIZE;
+        activeP.y = mouse.y - Board.HALF_SQUARE_SIZE;
+        activeP.col = activeP.getCol(activeP.x);
+        activeP.row = activeP.getRow(activeP.y);
     }
 
     @Override
@@ -157,6 +188,14 @@ public class GamePanel extends JPanel implements Runnable {
         //?pieces
         for (Piece p : simPieces) {
             p.draw(g2);
+        }
+        if (activeP != null) {
+            g2.setColor(Color.WHITE);
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
+            g2.fillRect(activeP.col * Board.SQUARE_SIZE, activeP.row * Board.SQUARE_SIZE, Board.SQUARE_SIZE, Board.SQUARE_SIZE);
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+            //confirm if the piece on right tile and resetting it's opacity
+            activeP.draw(g2);
         }
     }
 }
