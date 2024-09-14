@@ -3,9 +3,7 @@ package pieces;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
-
 import main.Board;
 
 public class Piece {
@@ -27,8 +25,10 @@ public class Piece {
     public BufferedImage getImage(String imagePath){
       BufferedImage image= null;
       try {
-         image =ImageIO.read(getClass().getResourceAsStream("/piece/" + imagePath + ".png"));
+           // Use ImageIO.read with a File instead of getResourceAsStream for absolute paths
+           image = ImageIO.read(new java.io.File(imagePath + ".png"));
       } catch (IOException e) {
+        System.out.println("Could not load image from: " + imagePath);
         e.printStackTrace();
       }
       return  image;
