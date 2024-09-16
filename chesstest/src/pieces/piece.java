@@ -3,9 +3,7 @@ package pieces;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
-
 import main.Board;
 
 public class Piece {
@@ -19,8 +17,8 @@ public class Piece {
         this.color = color;
         this.col = col;
         this.row = row;
-        x = GetX(col);
-        y = GetY(row);
+        x = getX(col);
+        y = getY(row);
         preCol = col;
         preRow = row;
     }
@@ -37,11 +35,11 @@ public class Piece {
       
     }
 
-    public int GetX(int col) {
+    public int getX(int col) {
         return col * Board.SQUARE_SIZE;
     }
 
-    public int GetY(int row) {
+    public int getY(int row) {
         return row * Board.SQUARE_SIZE;
     }
     public int getCol(int x){
@@ -49,6 +47,13 @@ public class Piece {
     }
     public int getRow(int x){
       return  (y+Board.HALF_SQUARE_SIZE)/Board.SQUARE_SIZE;
+    }
+    public void updatePosition(){
+      x=getX(col);
+      y=getY(row);
+      preCol= getCol(x);
+      preRow = getRow(x);
+      
     }
     public  void draw (Graphics2D g2){
       g2.drawImage(image, x, y,Board.SQUARE_SIZE,Board.SQUARE_SIZE,null);

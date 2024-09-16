@@ -5,10 +5,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
-
 import javax.swing.JPanel;
 import javax.swing.plaf.DimensionUIResource; //! Switch to "Dimesion" if ui not responding faster
-
 import pieces.Bishop;
 import pieces.King;
 import pieces.Knight;
@@ -167,6 +165,13 @@ public class GamePanel extends JPanel implements Runnable {
             } else {
                 //!if palyer is holding a piece
                 simulate();
+            }
+        }
+        //!Mouse Released
+        if(mouse.pressed==false){
+            if (activeP!=null) {
+                activeP.updatePosition();
+                activeP= null;
             }
         }
     }
