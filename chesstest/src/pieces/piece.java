@@ -55,7 +55,24 @@ public class Piece {
       preRow = getRow(x);
       
     }
+    
+    public void resetPosition() {
+      col=preCol;
+      row=preRow;
+      x=getCol(col);
+      y=getRow(row);
+    }
+
+   
+    public boolean  canMove(int targetCol , int targetRow){
+        return false;
+    }
+    public  boolean  isWithinBoard(int targetCol , int targetRow){
+      return  targetCol >= 0 && targetCol<=7 && targetRow >= 0 && targetRow<=7;
+    }
     public  void draw (Graphics2D g2){
       g2.drawImage(image, x, y,Board.SQUARE_SIZE,Board.SQUARE_SIZE,null);
     }
+
+    
 }
