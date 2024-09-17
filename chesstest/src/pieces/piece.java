@@ -59,8 +59,8 @@ public class Piece {
     public void resetPosition() {
       col=preCol;
       row=preRow;
-      x=getCol(col);
-      y=getRow(row);
+      x=getX(col);
+      y=getY(row);
     }
 
    
