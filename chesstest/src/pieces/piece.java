@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.Board;
+import main.GamePanel;
 
 public class Piece {
 
@@ -12,6 +13,7 @@ public class Piece {
     public int x, y;
     public int col, row, preCol, preRow;
     public int color;
+    public  Piece hittingP;
 
     public Piece(int color, int col, int row) {
         this.color = color;
@@ -69,6 +71,27 @@ public class Piece {
     }
     public  boolean  isWithinBoard(int targetCol , int targetRow){
       return  targetCol >= 0 && targetCol<=7 && targetRow >= 0 && targetRow<=7;
+    }
+    public  Piece getHittingP(int targetCol , int targetRow){
+      for (Piece piece : GamePanel.simPieces) {
+        if (piece.col == targetCol && piece.row == targetRow && piece != this) {
+          return piece;
+        }
+      }
+      return null;
+    }
+    public boolean isValidSquare(int targetCol , int targetRow){
+      hittingP =getHittingP(targetCol, targetRow);
+      if (hittingP==null) {//*Square vacant 
+        return  true;
+      }else{//* square occupied
+        if (hittingP.color!=this.color) {//*color diff can be captured
+          return  true;
+        }else{//* same color cannot move
+          hittingP=null;
+        }
+      }
+      return  false;
     }
     public  void draw (Graphics2D g2){
       g2.drawImage(image, x, y,Board.SQUARE_SIZE,Board.SQUARE_SIZE,null);
