@@ -78,7 +78,7 @@ public class GamePanel extends JPanel implements Runnable {
         //queen
         pieces.add(new Queen(WHITE, 3, 7));
         //king
-       // pieces.add(new King(WHITE, 4, 7));
+        // pieces.add(new King(WHITE, 4, 7));
         pieces.add(new King(WHITE, 4, 4));
 
         //?Black
@@ -172,21 +172,31 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
         //!Mouse Released
-        if(mouse.pressed==false){
-            if (activeP!=null) {
-                if (validSquare){
+        if (mouse.pressed == false) {
+            if (activeP != null) {
+                if (validSquare) {
+                    //*Move Confirmed */
+
+                    //*Update the piece list in case if the piece has been captured and removed during the simulation */
+                    copyPieces(simPieces, pieces);
                     activeP.updatePosition();
-                }else{
+                } else {
+                    //* The Move was not valid so restores using the backup list Pieces */
+                    copyPieces(pieces, simPieces);
                     activeP.resetPosition();
-                    activeP= null;
-                } 
+                    activeP = null;
+                }
             }
         }
     }
 
     private void simulate() {
-        canMove=false;
-        validSquare=false;
+        canMove = false;
+        validSquare = false;
+
+        //*Reset the piece list in every loop */
+        //*Restores the removed piece during the simulation */
+        copyPieces(pieces, simPieces);
 
         //?if piece is held by user , position is "updated"
         activeP.x = mouse.x - Board.HALF_SQUARE_SIZE;
@@ -195,9 +205,14 @@ public class GamePanel extends JPanel implements Runnable {
         activeP.row = activeP.getRow(activeP.y);
 
         //?check if the piece is hovering over a valid "tile"
-        if(activeP.canMove(activeP.col,activeP.row)){
-            canMove=true;
-            validSquare=true;
+        if (activeP.canMove(activeP.col, activeP.row)) {
+            canMove = true;
+            //!stimuation
+            //?if hitting an opponent piece ,remove from list
+            if (activeP.hittingP != null) {
+                simPieces.remove(activeP.hittingP.getIndex());
+            }
+            validSquare = true;
         }
     }
 
@@ -218,7 +233,7 @@ public class GamePanel extends JPanel implements Runnable {
                 g2.fillRect(activeP.col * Board.SQUARE_SIZE, activeP.row * Board.SQUARE_SIZE, Board.SQUARE_SIZE, Board.SQUARE_SIZE);
                 g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
             }
-           
+
             //confirm if the piece on right tile and resetting it's opacity
             activeP.draw(g2);
         }
