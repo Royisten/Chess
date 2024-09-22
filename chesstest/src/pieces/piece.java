@@ -80,6 +80,9 @@ public class Piece {
     public  boolean  isWithinBoard(int targetCol , int targetRow){
       return  targetCol >= 0 && targetCol<=7 && targetRow >= 0 && targetRow<=7;
     }
+    public boolean  isSameSquare(int targetCol , int targetRow){
+      return  targetCol==preCol && targetRow ==preRow;
+    }
     public  Piece getHittingP(int targetCol , int targetRow){
       for (Piece piece : GamePanel.simPieces) {
         if (piece.col == targetCol && piece.row == targetRow && piece != this) {
