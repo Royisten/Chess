@@ -104,6 +104,13 @@ public class Piece {
       }
       return  false;
     }
+    public  boolean pieceIsOnStraightLine(int targetCol , int targetRow){
+      //when the piece is moving up
+      //when the piece is moving down
+      //when the piece is moving left 
+      //when the piece is moving right
+      return  false;
+    }
     public  void draw (Graphics2D g2){
       g2.drawImage(image, x, y,Board.SQUARE_SIZE,Board.SQUARE_SIZE,null);
     }
