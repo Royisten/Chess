@@ -16,6 +16,7 @@ public class King extends Piece {
     @Override
     public boolean canMove(int targetCol, int targetRow) {
         if (isWithinBoard(targetCol, targetRow)) {
+            //?movement ratio 1:1
             if (Math.abs(targetCol - preCol) + Math.abs(targetRow - preRow) == 1
                     || Math.abs(targetCol - preCol) * Math.abs(targetRow - preRow) == 1) {
                 if (isValidSquare(targetCol, targetRow)) {

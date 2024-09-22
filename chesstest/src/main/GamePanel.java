@@ -68,7 +68,8 @@ public class GamePanel extends JPanel implements Runnable {
         pieces.add(new Pawn(WHITE, 7, 6));
         //knight
         pieces.add(new Knight(WHITE, 1, 7));
-        pieces.add(new Knight(WHITE, 6, 7));
+        //pieces.add(new Knight(WHITE, 6, 7));
+        pieces.add(new Knight(WHITE, 4, 4));
         //rook
         pieces.add(new Rook(WHITE, 0, 7));
         pieces.add(new Rook(WHITE, 7, 7));
@@ -78,8 +79,8 @@ public class GamePanel extends JPanel implements Runnable {
         //queen
         pieces.add(new Queen(WHITE, 3, 7));
         //king
-        // pieces.add(new King(WHITE, 4, 7));
-        pieces.add(new King(WHITE, 4, 4));
+        pieces.add(new King(WHITE, 4, 7));
+        
 
         //?Black
         //pawn
@@ -94,6 +95,7 @@ public class GamePanel extends JPanel implements Runnable {
         //knight
         pieces.add(new Knight(BLACK, 1, 0));
         pieces.add(new Knight(BLACK, 6, 0));
+       
         //rook
         pieces.add(new Rook(BLACK, 0, 0));
         pieces.add(new Rook(BLACK, 7, 0));
