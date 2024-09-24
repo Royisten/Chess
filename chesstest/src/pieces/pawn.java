@@ -35,6 +35,12 @@ public class Pawn extends Piece {
                     && pieceIsOnStraightLine(targetCol, targetRow) == false) {
                 return true;
             }
+            //?Diagonal movement & capture if a foe is on the diagonal path
+            if (Math.abs(targetCol-preCol)==1 && targetRow==preRow + moveValue && hittingP!= null
+                     && hittingP.color!=color) {
+                return  true;
+            }
+
         }
         return false;
     }
