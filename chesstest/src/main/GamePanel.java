@@ -58,7 +58,8 @@ public class GamePanel extends JPanel implements Runnable {
     public void setPieces() {
         //?White
         //pawn
-        pieces.add(new Pawn(WHITE, 0, 6));
+        //pieces.add(new Pawn(WHITE, 0, 6));
+        pieces.add(new Pawn(WHITE, 4, 4));
         pieces.add(new Pawn(WHITE, 1, 6));
         pieces.add(new Pawn(WHITE, 2, 6));
         pieces.add(new Pawn(WHITE, 3, 6));
@@ -79,8 +80,8 @@ public class GamePanel extends JPanel implements Runnable {
         pieces.add(new Bishop(WHITE, 5, 7));
        
         //queen
-        //pieces.add(new Queen(WHITE, 3, 7));
-        pieces.add(new Queen(WHITE, 4, 4));
+        pieces.add(new Queen(WHITE, 3, 7));
+        
         //king
         pieces.add(new King(WHITE, 4, 7));
         
