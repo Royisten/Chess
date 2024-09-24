@@ -17,7 +17,6 @@ public class Pawn extends Piece {
     public boolean canMove(int targetCol, int targetRow) {
         if (isWithinBoard(targetCol, targetRow) && isSameSquare(targetCol, targetRow) == false) {
             //define movement based on color
-            @SuppressWarnings("unused")
             int moveValue;
             if (color == GamePanel.WHITE) {
                 moveValue = -1;
@@ -25,12 +24,16 @@ public class Pawn extends Piece {
                 moveValue = 1;
             }
             //? check if piece is hitting an another piece (ally/foe)
-            hittingP= getHittingP(targetCol, targetRow);
+            hittingP = getHittingP(targetCol, targetRow);
 
             //? 1 Square movement
-            if (targetCol== preCol && targetRow ==preRow + moveValue && hittingP ==null) {
-                return  true;
-                
+            if (targetCol == preCol && targetRow == preRow + moveValue && hittingP == null) {
+                return true;
+            }
+            //? 2 square movement
+            if (targetCol == preCol && targetRow == preRow + moveValue * 2 && hittingP == null && moved == false
+                    && pieceIsOnStraightLine(targetCol, targetRow) == false) {
+                return true;
             }
         }
         return false;
