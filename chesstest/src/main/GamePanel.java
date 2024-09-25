@@ -2,8 +2,10 @@ package main;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.plaf.DimensionUIResource; //! Switch to "Dimesion" if ui not responding faster
@@ -69,21 +71,20 @@ public class GamePanel extends JPanel implements Runnable {
         //knight
         pieces.add(new Knight(WHITE, 1, 7));
         pieces.add(new Knight(WHITE, 6, 7));
-        
+
         //rook
         pieces.add(new Rook(WHITE, 0, 7));
         pieces.add(new Rook(WHITE, 7, 7));
-        
+
         //bishop
         pieces.add(new Bishop(WHITE, 2, 7));
         pieces.add(new Bishop(WHITE, 5, 7));
-       
+
         //queen
         pieces.add(new Queen(WHITE, 3, 7));
-        
+
         //king
         pieces.add(new King(WHITE, 4, 7));
-        
 
         //?Black
         //pawn
@@ -98,7 +99,7 @@ public class GamePanel extends JPanel implements Runnable {
         //knight
         pieces.add(new Knight(BLACK, 1, 0));
         pieces.add(new Knight(BLACK, 6, 0));
-       
+
         //rook
         pieces.add(new Rook(BLACK, 0, 0));
         pieces.add(new Rook(BLACK, 7, 0));
@@ -185,6 +186,8 @@ public class GamePanel extends JPanel implements Runnable {
                     //*Update the piece list in case if the piece has been captured and removed during the simulation */
                     copyPieces(simPieces, pieces);
                     activeP.updatePosition();
+
+                    changePlayer();
                 } else {
                     //* The Move was not valid so restores using the backup list Pieces */
                     copyPieces(pieces, simPieces);
@@ -221,6 +224,15 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    private void changePlayer() {
+        if (currentColor == WHITE) {
+            currentColor = BLACK;
+        } else {
+            currentColor = WHITE;
+        }
+        activeP = null;
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -241,6 +253,17 @@ public class GamePanel extends JPanel implements Runnable {
 
             //confirm if the piece on right tile and resetting it's opacity
             activeP.draw(g2);
+        }
+        //?Status msg
+        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        g2.setFont(new Font("Book Antiqua", Font.ITALIC, 35));
+        g2.setColor(Color.WHITE);
+
+        if (currentColor==WHITE) {
+            g2.drawString("WHITE'S turn", 840, 550);
+        }else{
+            g2.drawString("BLACK'S turn", 840, 250);
+
         }
     }
 }
