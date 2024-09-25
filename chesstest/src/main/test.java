@@ -7,3 +7,4 @@ public class test {
                 "Isaiah 40:31  \"But they that wait upon the Lord shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary; and they shall walk, and not faint\" ");
     }
 }
+//TODO code checked mannally 100%
