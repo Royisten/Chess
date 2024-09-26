@@ -3,7 +3,9 @@ package pieces;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
+
 import main.Board;
 import main.GamePanel;
 
@@ -117,7 +119,7 @@ public class Piece {
 
     public boolean pieceIsOnStraightLine(int targetCol, int targetRow) {
         //when the piece is moving up
-        for (int r = preRow - 1; r > targetCol; r--) {
+        for (int r = preRow - 1; r > targetRow; r--) {
             for (Piece piece : GamePanel.simPieces) {
                 if (piece.row == r && piece.col == targetCol) {
                     hittingP = piece;
@@ -126,7 +128,7 @@ public class Piece {
             }
         }
         //when the piece is moving down
-        for (int r = preRow + 1; r < targetCol; r++) {
+        for (int r = preRow + 1; r < targetRow; r++) {
             for (Piece piece : GamePanel.simPieces) {
                 if (piece.row == r && piece.col == targetCol) {
                     hittingP = piece;

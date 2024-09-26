@@ -15,10 +15,10 @@ public class Rook extends Piece {
 
     @Override
     public boolean canMove(int targetCol, int targetRow) {
-        if (isWithinBoard(targetCol, targetRow)) {
+        if (isWithinBoard(targetCol, targetRow) && isSameSquare(targetCol, targetRow) == false) {
             //?Rook can move as long as it's row or col is same
-            if (targetCol == preCol || targetRow == preRow && isSameSquare(targetCol, targetRow) == false) {
-                if (isValidSquare(targetCol, targetRow) && pieceIsOnStraightLine(targetCol, targetRow)==false) {
+            if (targetCol == preCol || targetRow == preRow) {
+                if (isValidSquare(targetCol, targetRow) && pieceIsOnStraightLine(targetCol, targetRow) == false) {
                     return true;
                 }
             }
