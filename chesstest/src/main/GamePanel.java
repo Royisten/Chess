@@ -7,10 +7,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
-
 import javax.swing.JPanel;
 import javax.swing.plaf.DimensionUIResource; //! Switch to "Dimesion" if ui not responding faster
-
 import pieces.Bishop;
 import pieces.King;
 import pieces.Knight;
@@ -36,6 +34,7 @@ public class GamePanel extends JPanel implements Runnable {
     public static ArrayList<Piece> pieces = new ArrayList<>();
     public static ArrayList<Piece> simPieces = new ArrayList<>();
     Piece activeP;
+    public static Piece castlingP;
     //?color 
     public static final int WHITE = 0;
     public static final int BLACK = 1;
@@ -71,20 +70,18 @@ public class GamePanel extends JPanel implements Runnable {
         pieces.add(new Pawn(WHITE, 6, 6));
         pieces.add(new Pawn(WHITE, 7, 6));
         //knight
-        pieces.add(new Knight(WHITE, 1, 7));
-        pieces.add(new Knight(WHITE, 6, 7));
+        //pieces.add(new Knight(WHITE, 1, 7));
+        //pieces.add(new Knight(WHITE, 6, 7));
 
         //rook
         pieces.add(new Rook(WHITE, 0, 7));
         pieces.add(new Rook(WHITE, 7, 7));
 
         //bishop
-        pieces.add(new Bishop(WHITE, 2, 7));
-        pieces.add(new Bishop(WHITE, 5, 7));
-
+        //pieces.add(new Bishop(WHITE, 2, 7));
+        //pieces.add(new Bishop(WHITE, 5, 7));
         //queen
-        pieces.add(new Queen(WHITE, 3, 7));
-
+        //pieces.add(new Queen(WHITE, 3, 7));
         //king
         pieces.add(new King(WHITE, 4, 7));
 
@@ -189,6 +186,11 @@ public class GamePanel extends JPanel implements Runnable {
                     copyPieces(simPieces, pieces);
                     activeP.updatePosition();
 
+                    //?castling move mouse update
+                    if (castlingP != null) {
+                        castlingP.updatePosition();
+                    }
+
                     changePlayer();
                 } else {
                     //* The Move was not valid so restores using the backup list Pieces */
@@ -208,6 +210,12 @@ public class GamePanel extends JPanel implements Runnable {
         //*Restores the removed piece during the simulation */
         copyPieces(pieces, simPieces);
 
+        //?reset castling ROOK position
+        if (castlingP != null) {
+            castlingP.col = castlingP.preCol;
+            castlingP.x = castlingP.getX(castlingP.col);
+            castlingP = null;
+        }
         //?if piece is held by user , position is "updated"
         activeP.x = mouse.x - Board.HALF_SQUARE_SIZE;
         activeP.y = mouse.y - Board.HALF_SQUARE_SIZE;
@@ -222,7 +230,19 @@ public class GamePanel extends JPanel implements Runnable {
             if (activeP.hittingP != null) {
                 simPieces.remove(activeP.hittingP.getIndex());
             }
+            checkcastling();
             validSquare = true;
+        }
+    }
+
+    private void checkcastling() {
+        if (castlingP != null) {
+            if (castlingP.col == 0) {
+                castlingP.col += 3;
+            } else if (castlingP.col == 7) {
+                castlingP.col -= 2;
+            }
+            castlingP.x = castlingP.getX(castlingP.col);
         }
     }
 
@@ -261,9 +281,9 @@ public class GamePanel extends JPanel implements Runnable {
         g2.setFont(new Font("Book Antiqua", Font.ITALIC, 35));
         g2.setColor(Color.WHITE);
 
-        if (currentColor==WHITE) {
+        if (currentColor == WHITE) {
             g2.drawString("WHITE'S turn", 840, 550);
-        }else{
+        } else {
             g2.drawString("BLACK'S turn", 840, 250);
 
         }
