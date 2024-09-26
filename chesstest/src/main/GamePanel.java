@@ -7,8 +7,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
+
 import javax.swing.JPanel;
 import javax.swing.plaf.DimensionUIResource; //! Switch to "Dimesion" if ui not responding faster
+
 import pieces.Bishop;
 import pieces.King;
 import pieces.Knight;
@@ -168,7 +170,7 @@ public class GamePanel extends JPanel implements Runnable {
                     //?if mouse on ally piece check if u can pick up it as a activeP
                     if (piece.color == currentColor
                             && piece.col == mouse.x / Board.SQUARE_SIZE
-                            && piece.row == mouse.x / Board.SQUARE_SIZE) {
+                            && piece.row == mouse.y / Board.SQUARE_SIZE) {
                         activeP = piece;
                     }
                 }
