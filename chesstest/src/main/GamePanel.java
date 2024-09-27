@@ -7,8 +7,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
+
 import javax.swing.JPanel;
 import javax.swing.plaf.DimensionUIResource; //! Switch to "Dimesion" if ui not responding faster
+
 import pieces.Bishop;
 import pieces.King;
 import pieces.Knight;
@@ -249,8 +251,22 @@ public class GamePanel extends JPanel implements Runnable {
     private void changePlayer() {
         if (currentColor == WHITE) {
             currentColor = BLACK;
+            //?en passant 
+            //* reset the black two step status
+            for (Piece piece : pieces) {
+                if (piece.color == BLACK) {
+                    piece.twoStepped = false;
+                }
+            }
         } else {
             currentColor = WHITE;
+            //?en passant 
+            //* reset the white two step status
+            for (Piece piece : pieces) {
+                if (piece.color == WHITE) {
+                    piece.twoStepped = false;
+                }
+            }
         }
         activeP = null;
     }
