@@ -7,10 +7,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
-
 import javax.swing.JPanel;
 import javax.swing.plaf.DimensionUIResource; //! Switch to "Dimesion" if ui not responding faster
-
 import pieces.Bishop;
 import pieces.King;
 import pieces.Knight;
@@ -35,6 +33,7 @@ public class GamePanel extends JPanel implements Runnable {
     //?Piece
     public static ArrayList<Piece> pieces = new ArrayList<>();
     public static ArrayList<Piece> simPieces = new ArrayList<>();
+    ArrayList<Piece> promoPieces = new ArrayList<>();
     Piece activeP;
     public static Piece castlingP;
     //?color 
@@ -44,6 +43,7 @@ public class GamePanel extends JPanel implements Runnable {
     //?Booleans
     boolean canMove;
     boolean validSquare;
+    boolean promotion;
 
     public GamePanel() {
         setPreferredSize(new DimensionUIResource(WIDTH, HEIGHT));
@@ -160,45 +160,53 @@ public class GamePanel extends JPanel implements Runnable {
 
     // !the above method calls the update and paintComponent 60 times per second
     private void update() {
+        if (promotion) {
+            promoting();
+        } else {
 
-        //!Mouse pressed
-        if (mouse.pressed) {
-            if (activeP == null) {
-                //?if activeP is null, check if  u can pick up a piece
-                for (Piece piece : simPieces) {
-                    //?if mouse on ally piece check if u can pick up it as a activeP
-                    if (piece.color == currentColor
-                            && piece.col == mouse.x / Board.SQUARE_SIZE
-                            && piece.row == mouse.y / Board.SQUARE_SIZE) {
-                        activeP = piece;
+            //!Mouse pressed
+            if (mouse.pressed) {
+                if (activeP == null) {
+                    //?if activeP is null, check if  u can pick up a piece
+                    for (Piece piece : simPieces) {
+                        //?if mouse on ally piece check if u can pick up it as a activeP
+                        if (piece.color == currentColor
+                                && piece.col == mouse.x / Board.SQUARE_SIZE
+                                && piece.row == mouse.y / Board.SQUARE_SIZE) {
+                            activeP = piece;
+                        }
                     }
-                }
-            } else {
-                //!if palyer is holding a piece
-                simulate();
-            }
-        }
-        //!Mouse Released
-        if (mouse.pressed == false) {
-            if (activeP != null) {
-                if (validSquare) {
-                    //*Move Confirmed */
-
-                    //*Update the piece list in case if the piece has been captured and removed during the simulation */
-                    copyPieces(simPieces, pieces);
-                    activeP.updatePosition();
-
-                    //?castling move mouse update
-                    if (castlingP != null) {
-                        castlingP.updatePosition();
-                    }
-
-                    changePlayer();
                 } else {
-                    //* The Move was not valid so restores using the backup list Pieces */
-                    copyPieces(pieces, simPieces);
-                    activeP.resetPosition();
-                    activeP = null;
+                    //!if palyer is holding a piece
+                    simulate();
+                }
+            }
+            //!Mouse Released
+            if (mouse.pressed == false) {
+                if (activeP != null) {
+                    if (validSquare) {
+                        //*Move Confirmed */
+
+                        //*Update the piece list in case if the piece has been captured and removed during the simulation */
+                        copyPieces(simPieces, pieces);
+                        activeP.updatePosition();
+
+                        //?castling move mouse update
+                        if (castlingP != null) {
+                            castlingP.updatePosition();
+                        }
+                        if (canPromote()) {
+                            promotion = true;
+                        } else {
+                            changePlayer();
+                        }
+
+                    } else {
+                        //* The Move was not valid so restores using the backup list Pieces */
+                        copyPieces(pieces, simPieces);
+                        activeP.resetPosition();
+                        activeP = null;
+                    }
                 }
             }
         }
@@ -271,6 +279,25 @@ public class GamePanel extends JPanel implements Runnable {
         activeP = null;
     }
 
+    private boolean canPromote() {
+        if (activeP.type == Type.PAWN) {
+            if (currentColor == WHITE && activeP.row == 0 || currentColor == BLACK && activeP.row == 7) {
+                promoPieces.clear();
+                promoPieces.add(new Rook(currentColor, 9, 2));
+                promoPieces.add(new Knight(currentColor, 9, 3));
+                promoPieces.add(new Bishop(currentColor, 9, 4));
+                promoPieces.add(new Queen(currentColor, 9, 5));
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void promoting() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'promoting'");
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -297,11 +324,19 @@ public class GamePanel extends JPanel implements Runnable {
         g2.setFont(new Font("Book Antiqua", Font.ITALIC, 35));
         g2.setColor(Color.WHITE);
 
-        if (currentColor == WHITE) {
-            g2.drawString("WHITE'S turn", 840, 550);
+        if (promotion) {
+            g2.drawString("Promote to ", 840, 150);
+            for (Piece piece : promoPieces) {
+                g2.drawImage(piece.image, piece.getX(piece.col), piece.getY(piece.row),
+                        Board.SQUARE_SIZE, Board.SQUARE_SIZE, null);
+            }
         } else {
-            g2.drawString("BLACK'S turn", 840, 250);
+            if (currentColor == WHITE) {
+                g2.drawString("WHITE'S turn", 840, 550);
+            } else {
+                g2.drawString("BLACK'S turn", 840, 250);
 
+            }
         }
     }
 }
