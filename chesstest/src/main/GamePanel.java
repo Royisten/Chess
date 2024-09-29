@@ -47,7 +47,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public GamePanel() {
         setPreferredSize(new DimensionUIResource(WIDTH, HEIGHT));
-        setBackground(Color.BLACK);
+        setBackground(Color.GRAY);
         addMouseMotionListener(mouse);
         addMouseListener(mouse);
 
@@ -293,9 +293,35 @@ public class GamePanel extends JPanel implements Runnable {
         return false;
     }
 
+    //? mouse action for status screen 
     private void promoting() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'promoting'");
+        if (mouse.pressed) {
+            for (Piece piece : promoPieces) {
+                if (piece.col == mouse.x / Board.SQUARE_SIZE && piece.row == mouse.y / Board.SQUARE_SIZE) {
+                    switch (piece.type) {
+                        case ROOK:
+                            simPieces.add(new Rook(currentColor, activeP.col, activeP.row));
+                            break;
+                        case KNIGHT:
+                            simPieces.add(new Knight(currentColor, activeP.col, activeP.row));
+                            break;
+                        case BISHOP:
+                            simPieces.add(new Bishop(currentColor, activeP.col, activeP.row));
+                            break;
+                        case QUEEN:
+                            simPieces.add(new Queen(currentColor, activeP.col, activeP.row));
+                            break;
+                        default:
+                            break;
+                    }
+                    simPieces.remove(activeP.getIndex());
+                    copyPieces(simPieces, pieces);
+                    activeP=null;
+                    promotion=false;
+                    changePlayer();
+                }
+            }
+        }
     }
 
     @Override
