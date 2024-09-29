@@ -241,8 +241,22 @@ public class GamePanel extends JPanel implements Runnable {
                 simPieces.remove(activeP.hittingP.getIndex());
             }
             checkcastling();
-            validSquare = true;
+            if (isillegal(activeP) == false) {
+                validSquare = true;
+            }
+
         }
+    }
+
+    private boolean isillegal(Piece king) {
+        if (king.type == Type.KING) {
+            for (Piece piece : simPieces) {
+                if (piece != king && piece.color != king.color && piece.canMove(king.col, king.row)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void checkcastling() {
@@ -316,8 +330,8 @@ public class GamePanel extends JPanel implements Runnable {
                     }
                     simPieces.remove(activeP.getIndex());
                     copyPieces(simPieces, pieces);
-                    activeP=null;
-                    promotion=false;
+                    activeP = null;
+                    promotion = false;
                     changePlayer();
                 }
             }
@@ -336,10 +350,18 @@ public class GamePanel extends JPanel implements Runnable {
         }
         if (activeP != null) {
             if (canMove) {
-                g2.setColor(Color.WHITE);
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
-                g2.fillRect(activeP.col * Board.SQUARE_SIZE, activeP.row * Board.SQUARE_SIZE, Board.SQUARE_SIZE, Board.SQUARE_SIZE);
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+                if (isillegal(activeP)) {
+                    g2.setColor(Color.ORANGE);
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
+                    g2.fillRect(activeP.col * Board.SQUARE_SIZE, activeP.row * Board.SQUARE_SIZE, Board.SQUARE_SIZE, Board.SQUARE_SIZE);
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+                } else {
+                    g2.setColor(Color.WHITE);
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
+                    g2.fillRect(activeP.col * Board.SQUARE_SIZE, activeP.row * Board.SQUARE_SIZE, Board.SQUARE_SIZE, Board.SQUARE_SIZE);
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+                }
+
             }
 
             //confirm if the piece on right tile and resetting it's opacity
