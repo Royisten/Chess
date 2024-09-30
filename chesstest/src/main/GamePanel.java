@@ -45,6 +45,7 @@ public class GamePanel extends JPanel implements Runnable {
     boolean validSquare;
     boolean promotion;
     boolean gameOver;
+    boolean stalemate;
 
     public GamePanel() {
         setPreferredSize(new DimensionUIResource(WIDTH, HEIGHT));
@@ -158,12 +159,12 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
     }
-
     // !the above method calls the update and paintComponent 60 times per second
+
     private void update() {
         if (promotion) {
             promoting();
-        } else if (gameOver == false) {
+        } else if (gameOver == false && stalemate == false) {
 
             //!Mouse pressed
             if (mouse.pressed) {
@@ -198,6 +199,8 @@ public class GamePanel extends JPanel implements Runnable {
                         }
                         if (isKingInCheck() && isCheckmate()) {
                             gameOver = true;
+                        } else if (isStalemate() && isKingInCheck() == false) {
+                            stalemate = true;
                         } else {
                             //? game can still goes on
                             if (canPromote()) {
@@ -463,6 +466,22 @@ public class GamePanel extends JPanel implements Runnable {
         return king;
     }
 
+    private boolean isStalemate() {
+        int count = 0;
+        for (Piece piece : simPieces) {
+            if (piece.color != currentColor) {
+                count++;
+            }
+        }
+        //*if only one piece is left (King) */
+        if (count == 1) {
+            if (kingCanMove(getKing(true)) == false) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void checkcastling() {
         if (castlingP != null) {
             if (castlingP.col == 0) {
@@ -610,6 +629,11 @@ public class GamePanel extends JPanel implements Runnable {
             g2.setFont(new Font("Arial", Font.PLAIN, 90));
             g2.setColor(Color.green);
             g2.drawString(s, 200, 420);
+        }
+        if (stalemate) {
+            g2.setFont(new Font("Arial", Font.PLAIN, 90));
+            g2.setColor(Color.LIGHT_GRAY);
+            g2.drawString("Stalemate", 200, 420);
         }
     }
 
