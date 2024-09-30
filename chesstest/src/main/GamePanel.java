@@ -7,8 +7,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
+
 import javax.swing.JPanel;
 import javax.swing.plaf.DimensionUIResource; //! Switch to "Dimesion" if ui not responding faster
+
 import pieces.Bishop;
 import pieces.King;
 import pieces.Knight;
@@ -34,7 +36,7 @@ public class GamePanel extends JPanel implements Runnable {
     public static ArrayList<Piece> pieces = new ArrayList<>();
     public static ArrayList<Piece> simPieces = new ArrayList<>();
     ArrayList<Piece> promoPieces = new ArrayList<>();
-    Piece activeP;
+    Piece activeP, checkingP;
     public static Piece castlingP;
     //?color 
     public static final int WHITE = 0;
@@ -44,10 +46,11 @@ public class GamePanel extends JPanel implements Runnable {
     boolean canMove;
     boolean validSquare;
     boolean promotion;
+    boolean gameOver;
 
     public GamePanel() {
         setPreferredSize(new DimensionUIResource(WIDTH, HEIGHT));
-        setBackground(Color.GRAY);
+        setBackground(Color.DARK_GRAY);
         addMouseMotionListener(mouse);
         addMouseListener(mouse);
 
@@ -195,12 +198,14 @@ public class GamePanel extends JPanel implements Runnable {
                         if (castlingP != null) {
                             castlingP.updatePosition();
                         }
-                        if (canPromote()) {
+                        if (isKingInCheck()) {
+                            //TODO ; possibly game over
+                        } if (canPromote()) {
                             promotion = true;
                         } else {
                             changePlayer();
                         }
-
+                        
                     } else {
                         //* The Move was not valid so restores using the backup list Pieces */
                         copyPieces(pieces, simPieces);
@@ -257,6 +262,33 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
         return false;
+    }
+
+    private boolean isKingInCheck() {
+        Piece king = getKing(true);
+        if (activeP.canMove(king.col, king.row)) {
+            checkingP = activeP;
+            return true;
+        } else {
+            checkingP = null;
+        }
+        return false;
+    }
+
+    private Piece getKing(boolean opponent) {
+        Piece king = null;
+        for (Piece piece : simPieces) {
+            if (opponent) {
+                if (piece.type == Type.KING && piece.color != currentColor) {
+                    king = piece;
+                }
+            } else {
+                if (piece.type == Type.KING && piece.color == currentColor) {
+                    king = piece;
+                }
+            }
+        }
+        return king;
     }
 
     private void checkcastling() {
@@ -381,10 +413,20 @@ public class GamePanel extends JPanel implements Runnable {
         } else {
             if (currentColor == WHITE) {
                 g2.drawString("WHITE'S turn", 840, 550);
+                if (checkingP != null && checkingP.color == BLACK) {
+                    g2.setColor(Color.RED);
+                    g2.drawString("The King ", 840, 650);
+                    g2.drawString("is in check! ", 840, 700);
+                }
             } else {
                 g2.drawString("BLACK'S turn", 840, 250);
-
+                if (checkingP != null && checkingP.color == WHITE) {
+                    g2.setColor(Color.RED);
+                    g2.drawString("The King ", 840, 100);
+                    g2.drawString("is in check! ", 840, 150);
+                }
             }
         }
     }
+
 }
