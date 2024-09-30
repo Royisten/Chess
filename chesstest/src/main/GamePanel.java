@@ -7,10 +7,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
-
 import javax.swing.JPanel;
 import javax.swing.plaf.DimensionUIResource; //! Switch to "Dimesion" if ui not responding faster
-
 import pieces.Bishop;
 import pieces.King;
 import pieces.Knight;
@@ -246,7 +244,7 @@ public class GamePanel extends JPanel implements Runnable {
                 simPieces.remove(activeP.hittingP.getIndex());
             }
             checkcastling();
-            if (isillegal(activeP) == false) {
+            if (isillegal(activeP) == false && opponentCanCaptureKing()==false) {
                 validSquare = true;
             }
 
@@ -262,6 +260,15 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
         return false;
+    }
+    private boolean opponentCanCaptureKing(){
+        Piece king=getKing(false);
+        for (Piece piece : simPieces) {
+            if (piece.color!=king.color && piece.canMove(king.col, king.row)) {
+                return  true;
+            }
+        }
+        return  false;
     }
 
     private boolean isKingInCheck() {
@@ -382,7 +389,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
         if (activeP != null) {
             if (canMove) {
-                if (isillegal(activeP)) {
+                if (isillegal(activeP) || opponentCanCaptureKing()) {
                     g2.setColor(Color.ORANGE);
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7f));
                     g2.fillRect(activeP.col * Board.SQUARE_SIZE, activeP.row * Board.SQUARE_SIZE, Board.SQUARE_SIZE, Board.SQUARE_SIZE);
